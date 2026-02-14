@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Receipt Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Fintech Receipt Generator</h2>
+
+  <div class="form-box">
+    <select id="bank">
+      <option value="">Select Bank</option>
+      <option value="Opay">Opay</option>
+      <option value="Palmpay">Palmpay</option>
+      <option value="Kuda">Kuda</option>
+      <option value="UBA">UBA</option>
+    </select>
+
+    <input type="text" id="sender" placeholder="Sender Name">
+    <input type="text" id="receiver" placeholder="Receiver Name">
+    <input type="number" id="amount" placeholder="Amount">
+
+    <button onclick="generateReceipt()">Generate Receipt</button>
+  </div>
+
+  <div class="receipt" id="receipt">
+    <div class="receipt-header">
+      <h3 id="r-bank"></h3>
+      <p>Transfer Successful</p>
+    </div>
+
+    <div class="receipt-body">
+      <p><strong>From:</strong> <span id="r-sender"></span></p>
+      <p><strong>To:</strong> <span id="r-receiver"></span></p>
+      <p><strong>Amount:</strong> ₦<span id="r-amount"></span></p>
+      <p><strong>Date:</strong> <span id="r-date"></span></p>
+      <p><strong>Transaction ID:</strong> <span id="r-id"></span></p>
+    </div>
+
+    <button onclick="downloadReceipt()">Download</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
