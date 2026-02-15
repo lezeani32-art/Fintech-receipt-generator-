@@ -1,62 +1,32 @@
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #00c853, #00bfa5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+function generateReceipt() {
+  const bank = document.getElementById("bank").value;
+  const sender = document.getElementById("sender").value;
+  const receiver = document.getElementById("receiver").value;
+  const amount = document.getElementById("amount").value;
+
+  if (!bank || !sender || !receiver || !amount) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  const date = new Date().toLocaleString();
+  const transactionId = "TX" + Math.floor(Math.random() * 1000000000);
+
+  document.getElementById("r-bank").innerText = bank;
+  document.getElementById("r-sender").innerText = sender;
+  document.getElementById("r-receiver").innerText = receiver;
+  document.getElementById("r-amount").innerText = Number(amount).toLocaleString();
+  document.getElementById("r-date").innerText = date;
+  document.getElementById("r-id").innerText = transactionId;
+
+  document.getElementById("receipt").style.display = "block";
 }
 
-.container {
-  width: 350px;
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-h2 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.form-box input, select {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: #00c853;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-.receipt {
-  display: none;
-  margin-top: 20px;
-  padding: 15px;
-  border-radius: 15px;
-  background: #f9f9f9;
-}
-
-.receipt-header {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.receipt-body p {
-  font-size: 14px;
-  margin: 5px 0;
+function downloadReceipt() {
+  html2canvas(document.getElementById("receipt")).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "receipt.png";
+    link.href = canvas.toDataURL();
+    link.click();
+  });
 }
