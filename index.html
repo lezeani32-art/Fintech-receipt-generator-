@@ -1,32 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Generate Transaction ID</title>
+  <title>Mini Fintech App</title>
+  <style>
+    body { font-family: Arial; background: #f4f6f8; padding: 20px; }
+    .card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    select, input, button { padding: 8px; margin: 5px 0; width: 100%; }
+    button { background: #003087; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    .receipt { margin-top: 15px; }
+    .row { display: flex; justify-content: space-between; margin: 5px 0; }
+  </style>
 </head>
 <body>
 
-<h2>Generated ID:</h2>
-<p id="output"></p>
+<h2>Mini Fintech Simulator</h2>
+
+<div class="card">
+  <h3>Transfer Money</h3>
+  <select id="fromUser"></select>
+  <select id="toUser"></select>
+  <input type="number" id="amount" placeholder="Enter amount" />
+  <button onclick="makeTransfer()">Send Money</button>
+</div>
+
+<div class="card receipt" id="receipt" style="display:none;">
+  <h3>Transaction Receipt</h3>
+  <div class="row"><span>ID:</span> <span id="rid"></span></div>
+  <div class="row"><span>From:</span> <span id="rfrom"></span></div>
+  <div class="row"><span>To:</span> <span id="rto"></span></div>
+  <div class="row"><span>Amount:</span> <span id="ramount"></span></div>
+  <div class="row"><span>Date:</span> <span id="rdate"></span></div>
+  <div class="row"><span>Status:</span> <span id="rstatus"></span></div>
+</div>
 
 <script>
-function generateBankStyleID() {
-  const prefix = "cpt1";
+async function loadUsers() {
+  const res = await fetch('/users');
+  const users = await res.json();
 
-  // Random 5-character alphanumeric string
-  const node = Math.random().toString(36).substring(2, 7);
+  const fromSelect = document.getElementById('fromUser');
+  const toSelect = document.getElementById('toUser');
 
-  // Current timestamp in milliseconds
-  const timestamp = Date.now();
-
-  // Random 12-character hex string
-  const randomHash = [...Array(12)]
-    .map(() => Math.floor(Math.random() * 16).toString(16))
-    .join('');
-
-  return `${prefix}::${node}-${timestamp}-${randomHash}`;
+  users.forEach(user => {
+    fromSelect.innerHTML += `<option value="${user.id}">${user.name} (₦${user.balance})</option>`;
+    toSelect.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+  });
 }
 
-document.getElementById("output").innerText = generateBankStyleID();
+async function makeTransfer() {
+  const fromId = document.getElementById('fromUser').value;
+  const toId = document.getElementById('toUser').value;
+  const amount = parseInt(document.getElementById('amount').value);
+
+  const res = await fetch('/transfer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fromId, toId, amount })
+  });
+
+  const data = await res.json();
+
+  if (data.error) {
+    alert(data.error);
+    return;
+  }
+
+  document.getElementById('receipt').style.display = "block";
+  document.getElementById('rid').innerText = data.id;
+  document.getElementById('rfrom').innerText = data.from;
+  document.getElementById('rto').innerText = data.to;
+  document.getElementById('ramount').innerText = "₦" + data.amount;
+  document.getElementById('rdate').innerText = new Date(data.date).toLocaleString();
+  document.getElementById('rstatus').innerText = data.status;
+
+  location.reload();
+}
+
+loadUsers();
 </script>
 
 </body>
