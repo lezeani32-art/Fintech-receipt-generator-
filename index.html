@@ -1,50 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Smart Receipt Generator</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <title>Generate Transaction ID</title>
 </head>
 <body>
 
-<div class="container">
-  <h2>Fintech Receipt Generator</h2>
+<h2>Generated ID:</h2>
+<p id="output"></p>
 
-  <div class="form-box">
-    <select id="bank">
-      <option value="">Select Bank</option>
-      <option value="Opay">Opay</option>
-      <option value="Palmpay">Palmpay</option>
-      <option value="Kuda">Kuda</option>
-      <option value="UBA">UBA</option>
-    </select>
+<script>
+function generateBankStyleID() {
+  const prefix = "cpt1";
 
-    <input type="text" id="sender" placeholder="Sender Name">
-    <input type="text" id="receiver" placeholder="Receiver Name">
-    <input type="number" id="amount" placeholder="Amount">
+  // Random 5-character alphanumeric string
+  const node = Math.random().toString(36).substring(2, 7);
 
-    <button onclick="generateReceipt()">Generate Receipt</button>
-  </div>
+  // Current timestamp in milliseconds
+  const timestamp = Date.now();
 
-  <div class="receipt" id="receipt">
-    <div class="receipt-header">
-      <h3 id="r-bank"></h3>
-      <p>Transfer Successful</p>
-    </div>
+  // Random 12-character hex string
+  const randomHash = [...Array(12)]
+    .map(() => Math.floor(Math.random() * 16).toString(16))
+    .join('');
 
-    <div class="receipt-body">
-      <p><strong>From:</strong> <span id="r-sender"></span></p>
-      <p><strong>To:</strong> <span id="r-receiver"></span></p>
-      <p><strong>Amount:</strong> ₦<span id="r-amount"></span></p>
-      <p><strong>Date:</strong> <span id="r-date"></span></p>
-      <p><strong>Transaction ID:</strong> <span id="r-id"></span></p>
-    </div>
+  return `${prefix}::${node}-${timestamp}-${randomHash}`;
+}
 
-    <button onclick="downloadReceipt()">Download</button>
-  </div>
-</div>
+document.getElementById("output").innerText = generateBankStyleID();
+</script>
 
-<script src="script.js"></script>
 </body>
 </html>
